@@ -45,10 +45,12 @@ cursor_obj.executemany(insert_query, local_query_result)
 connection_obj.commit()
 
 #Display the fragment created on the sqlite database
-updated_query = "SELECT ID, first_name, salary FROM doctors WHERE salary > 100000"
-cursor_obj.execute(updated_query)
+#updated_query = "SELECT ID, first_name, salary FROM doctors WHERE salary > 100000"
+#cursor_obj.execute(updated_query)
+cursor_obj.execute("CREATE TABLE IF NOT EXISTS salary_1 AS SELECT * FROM doctors WHERE salary > 100000")
+cursor_obj.execute("SELECT ID, first_name, salary FROM salary_1")
 updated_query_result = cursor_obj.fetchall()
-print("Fragment allocated to Sqlite: ")
+print("Fragment allocated to Sqlite: salary_1 table (>100000) ")
 print(updated_query_result)
 
 print("Query two (<100,000): ")
@@ -61,17 +63,18 @@ print(local_query_result2)
 #Insert data fetched into sqlite database
 
 #First clear the table to ensure no duplicates
-cursor_obj.execute("DELETE FROM doctors")
-
+cursor_obj.execute("DELETE FROM doctors")  #clear table before inserting to remobve duplicates
 insert_query2 = "INSERT INTO doctors (ID, first_name, salary) VALUES (?,?,?)"
 cursor_obj.executemany(insert_query2, local_query_result2)
 connection_obj.commit()
 
 #Display the fragment created on the sqlite database
-updated_query2 = "SELECT ID, first_name, salary FROM doctors WHERE salary < 100000"
-cursor_obj.execute(updated_query2)
+#updated_query2 = "SELECT ID, first_name, salary FROM doctors WHERE salary < 100000"
+#cursor_obj.execute(updated_query2)
+cursor_obj.execute("CREATE TABLE IF NOT EXISTS salary_2 AS SELECT * FROM doctors WHERE salary < 100000")
+cursor_obj.execute("SELECT ID, first_name, salary FROM salary_2")
 updated_query_result2 = cursor_obj.fetchall()
-print("Fragment allocated to Sqlite: ")
+print("Fragment allocated to Sqlite: salary_2 table (<100000)")
 print(updated_query_result2)
 
 #Query three
@@ -104,7 +107,7 @@ connection_obj.commit()
 cursor_obj.execute("CREATE TABLE IF NOT EXISTS male AS SELECT * FROM patients WHERE gender = 'Male'")
 cursor_obj.execute("SELECT ID, first_name, last_name, gender FROM male")
 updated_query_result1 = cursor_obj.fetchall()
-print("Fragment allocated to Sqlite: ")
+print("Fragment allocated to Sqlite: male table ")
 print(updated_query_result1)
 
 #Query four
@@ -137,7 +140,7 @@ connection_obj.commit()
 cursor_obj.execute("CREATE TABLE IF NOT EXISTS not_male AS SELECT * FROM patients WHERE gender != 'Male'")
 cursor_obj.execute("SELECT ID, first_name, last_name, gender FROM not_male")
 updated_query_result3 = cursor_obj.fetchall()
-print("Fragment allocated to Sqlite: ")
+print("Fragment allocated to Sqlite: not_name table ")
 print(updated_query_result3)
 
 

@@ -1,5 +1,3 @@
-upstream = mysql.connector.connect(
-#     host="192.168.100.205",
-#     user="test",
-#     password="SiteOne",)
-# upstream_cursor = upstream.cursor()  #Ubuntu cursor 
+print("All tables available in sqlite db: ")
+cursor_obj.execute("SELECT name FROM sqlite_master WHERE type='table';")
+print(cursor_obj.fetchall())
