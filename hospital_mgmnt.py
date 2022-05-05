@@ -1,5 +1,7 @@
 # Importing module
 import mysql.connector
+
+#Sample code to connect mysql to python
  
 # Creating connection object
 mydb = mysql.connector.connect(

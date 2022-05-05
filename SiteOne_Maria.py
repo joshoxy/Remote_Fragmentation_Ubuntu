@@ -1,6 +1,8 @@
 import mysql.connector
 
-#Site running on Ubuntu with Mariadb
+#Site running on Ubuntu with Mariadb. It stores the fragments for Primary Horizontal Fragmentation
+
+#Connect with Ubuntu using ip adrress on host
 upstream = mysql.connector.connect(
     host="192.168.100.205",
     user="test",
@@ -58,7 +60,7 @@ if __name__ == "__main__":
     local_adm_query_results = local_cursor.fetchall()
     
     #Insert data into Mariadb site Ubuntu
-    upstream_clear = "DELETE FROM admissions"  #clear table to ensure no duplicates 
+    upstream_clear = "DELETE FROM admissions"  #clear table before inserting to ensure no duplicates 
     upstream_cursor.execute(upstream_clear)
     upstream_insert_adm_sql = """INSERT INTO admissions (admission_id, patient_id, doctor_id, ward_number, ward_name, location, admission_date) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
     upstream_cursor.executemany(upstream_insert_adm_sql, local_adm_query_results)

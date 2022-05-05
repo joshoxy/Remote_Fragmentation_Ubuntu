@@ -1,6 +1,8 @@
 # importing required library
 import mysql.connector
 
+#Site running on Windows with mysql. It stores the fragments for Derived Horizontal Fragmentation and Vertical Fragmentation
+
 # connecting to the database
 dataBase = mysql.connector.connect(
 					host = "localhost",
@@ -10,23 +12,6 @@ dataBase = mysql.connector.connect(
 
 # preparing a cursor object
 cursorObject = dataBase.cursor(buffered=True)
-
-print("Primary Horizontal")
-print("Query 1:")
-query = "SELECT * FROM doctors WHERE department = 'Surgery' AND salary<100000"
-#cursorObject.execute("CREATE TABLE SALARY1 (SELECT * FROM doctors WHERE department = 'Surgery' AND salary<100000)")
-cursorObject.execute(query)
-query_result = cursorObject.fetchall()
-print(query_result)
-
-
-print("Query 2:")
-# query 2
-query1 = "SELECT * FROM admissions WHERE location = 'Nairobi'"
-#loc1 table exists
-cursorObject.execute(query1)
-query_one_result = cursorObject.fetchall()
-print(query_one_result)
 
 print("Derived Horizontal")
 print("LOC1:")
