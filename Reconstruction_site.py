@@ -31,11 +31,13 @@ print("Query one: ")
 cursor_obj.execute("SELECT name FROM sqlite_master WHERE type='table';")
 print(cursor_obj.fetchall())
 
-# query1 = "SELECT * FROM doctors"
-# cursor_obj.execute(query1)
-# update = connection_obj.fetchall()
-# print(update)
+query1 = "SELECT * FROM doctors"
+cursor_obj.execute(query1)
+update = cursor_obj.fetchall()
+print(update)
 
 #Display
+
+connection_obj.close()
 
 
