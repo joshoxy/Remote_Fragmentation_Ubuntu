@@ -19,7 +19,7 @@ local_cursor = local_stream.cursor(buffered=True)
 
 #Connect with Ubuntu using ip adrress on host
 upstream = mysql.connector.connect(
-    host="192.168.79.182",
+    host="192.168.100.205",
     user="test",
     password="SiteOne",)
 upstream_cursor = upstream.cursor()  #Ubuntu cursor 
@@ -110,6 +110,75 @@ print("Merged admissions table: ) ")
 print(merge_update_wards)
 print("")
 #End of derived horizontal reconstruction
+
+#Reconstruction of Primary Horizontal
+upstream_cursor.execute("USE hospital_management")
+print("Reconstruction of Primary Horizontal Fragmentation on mariadb Ubuntu: ")
+print("")
+upstream_cursor.execute("SELECT * FROM m1_table")
+query_m1 = upstream_cursor.fetchall()
+print("m1_table: ")
+print(query_m1)
+print("")
+
+upstream_cursor.execute("SELECT * FROM m2_table")
+query_m2 = upstream_cursor.fetchall()
+print("m2_table: ")
+print(query_m2)
+print("")
+
+upstream_cursor.execute("SELECT * FROM m3_table")
+query_m3 = upstream_cursor.fetchall()
+print("m3_table: ")
+print(query_m3)
+print("")
+
+upstream_cursor.execute("SELECT * FROM m4_table")
+query_m4 = upstream_cursor.fetchall()
+print("m4_table: ")
+print(query_m4)
+print("")
+
+
+#Doing reconstruction of m1, m2, m3, m4 tables
+#Using UNION statement to perform reconstruction
+merge_query_tables = "SELECT * FROM m1_table UNION SELECT * FROM m2_table UNION SELECT * FROM m3_table UNION SELECT * FROM m4_table"
+upstream_cursor.execute(merge_query_tables)
+merge_update_tables = upstream_cursor.fetchall()
+print("Merged doctors table: m1, m2, m3, m4) ")
+print(merge_update_tables)
+print("")
+#End of primary horizontal reconstruction
+
+
+
+#Reconstruction of Primary Horizontal Query 2
+upstream_cursor.execute("USE hospital_management")
+print("Reconstruction of Primary Horizontal Fragmentation Query 2 on mariadb Ubuntu: ")
+print("")
+upstream_cursor.execute("SELECT * FROM m1_nairobi")
+query_m1_nairobi = upstream_cursor.fetchall()
+print("m1_nairobi: ")
+print(query_m1_nairobi)
+print("")
+
+upstream_cursor.execute("SELECT * FROM m2_not_nairobi")
+query_m2_not_nairobi = upstream_cursor.fetchall()
+print("m2_not_nairobi: ")
+print(query_m2_not_nairobi)
+print("")
+
+
+#Doing reconstruction of m1_nairobi, m2_not_nairobi
+#Using UNION statement to perform reconstruction
+merge_query_tables_loc = "SELECT * FROM m1_nairobi UNION SELECT * FROM m2_not_nairobi"
+upstream_cursor.execute(merge_query_tables_loc)
+merge_update_tables_loc = upstream_cursor.fetchall()
+print("Merged doctors table: m1_nairobi, m2_not_nairobi) ")
+print(merge_update_tables_loc)
+print("")
+#End of primary horizontal reconstruction
+
 
 
 connection_obj.close()

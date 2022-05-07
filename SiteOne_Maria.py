@@ -4,7 +4,7 @@ import mysql.connector
 
 #Connect with Ubuntu using ip adrress on host
 upstream = mysql.connector.connect(
-    host="192.168.79.182",
+    host="192.168.100.205",
     user="test",
     password="SiteOne",
 
@@ -31,7 +31,8 @@ def init_fragment():
     local_cursor = local_stream.cursor(buffered=True)
     local_data_query = "SELECT * FROM doctors WHERE department = 'Surgery' AND salary<100000"
     
-    print("Primary Fragmentation: department = surgery Salary <100,000")
+    print("Primary Fragmentation: department = 'Surgery' AND salary<100000")
+    print("")
     print("M1 fragment fetched from localhost")
     local_cursor.execute(local_data_query)
     local_doctors_query_results = local_cursor.fetchall()
@@ -45,18 +46,25 @@ def init_fragment():
     upstream_cursor.executemany(upstream_insert_doctors_sql, local_doctors_query_results)
     upstream.commit()
 
+    
+    
+
     #Display the resulting fragment
 if __name__ == "__main__":
     #initialize fragment()
     upstream_cursor.execute("USE hospital_management")
 
     #M1 query on Mariadb 
-    upstream_data_query = "SELECT * FROM doctors WHERE department = 'Surgery' AND salary<100000"
+    # upstream_data_query = "SELECT * FROM doctors WHERE department = 'Surgery' AND salary<100000"
+    #create table fragment in Ubuntu 
+    upstream_cursor.execute("CREATE TABLE IF NOT EXISTS m1_table (SELECT * FROM doctors)")
+    upstream_cursor.execute("SELECT * FROM m1_table")
+    m1_final = upstream_cursor.fetchall()
 
-    print("M1 fragment fetched from Mariadb")
-    upstream_cursor.execute(upstream_data_query)
-    upstream_doctors_query_results = upstream_cursor.fetchall()
-    print(upstream_doctors_query_results)
+    print("M1 fragment fetched from Mariadb: department = 'Surgery' AND salary<100000")
+    # upstream_cursor.execute(upstream_data_query)
+    # upstream_doctors_query_results = upstream_cursor.fetchall()
+    print(m1_final)
     print("")
     #End of M1
 
@@ -68,6 +76,7 @@ if __name__ == "__main__":
     local_data_query1 = "SELECT * FROM doctors WHERE department = 'Surgery' AND salary > 100000"
     
     print("Primary Fragmentation: department = surgery Salary >100,000")
+    print("")
     print("M2 fragment fetched from localhost")
     local_cursor.execute(local_data_query1)
     local_doctors_query_results1 = local_cursor.fetchall()
@@ -87,12 +96,15 @@ if __name__ == "__main__":
     upstream_cursor.execute("USE hospital_management")
 
     #M2 query on Mariadb 
-    upstream_data_query1 = "SELECT * FROM doctors WHERE department = 'Surgery' AND salary>100000"
+    # upstream_data_query1 = "SELECT * FROM doctors WHERE department = 'Surgery' AND salary>100000"
 
     print("M2 fragment fetched from Mariadb")
-    upstream_cursor.execute(upstream_data_query1)
-    upstream_doctors_query_results1 = upstream_cursor.fetchall()
-    print(upstream_doctors_query_results1)
+    upstream_cursor.execute("CREATE TABLE IF NOT EXISTS m2_table (SELECT * FROM doctors)")
+    upstream_cursor.execute("SELECT * FROM m2_table")
+    m2_final = upstream_cursor.fetchall()
+    # upstream_cursor.execute(upstream_data_query1)
+    # upstream_doctors_query_results1 = upstream_cursor.fetchall()
+    print(m2_final)
     print("")
     #End of M2
 
@@ -104,6 +116,7 @@ if __name__ == "__main__":
     local_data_query2 = "SELECT * FROM doctors WHERE department  != 'Surgery' AND salary<100000"
     
     print("Primary Fragmentation: department != surgery Salary <100,000")
+    print("")
     print("M3 fragment fetched from localhost")
     local_cursor.execute(local_data_query2)
     local_doctors_query_results2 = local_cursor.fetchall()
@@ -123,12 +136,15 @@ if __name__ == "__main__":
     upstream_cursor.execute("USE hospital_management")
 
     #M1 query on Mariadb 
-    upstream_data_query2 = "SELECT * FROM doctors WHERE department != 'Surgery' AND salary<100000"
+    # upstream_data_query2 = "SELECT * FROM doctors WHERE department != 'Surgery' AND salary<100000"
 
     print("M3 fragment fetched from Mariadb")
-    upstream_cursor.execute(upstream_data_query2)
-    upstream_doctors_query_results2 = upstream_cursor.fetchall()
-    print(upstream_doctors_query_results2)
+    # upstream_cursor.execute(upstream_data_query2)
+    # upstream_doctors_query_results2 = upstream_cursor.fetchall()
+    upstream_cursor.execute("CREATE TABLE IF NOT EXISTS m3_table (SELECT * FROM doctors)")
+    upstream_cursor.execute("SELECT * FROM m3_table")
+    m3_final = upstream_cursor.fetchall()
+    print(m3_final)
     print("")
 #     #End of M3
 
@@ -140,6 +156,7 @@ if __name__ == "__main__":
     local_data_query3 = "SELECT * FROM doctors WHERE department != 'Surgery' AND salary>100000"
     
     print("Primary Fragmentation: department != surgery Salary >100,000")
+    print("")
     print("M4 fragment fetched from localhost")
     local_cursor.execute(local_data_query3)
     local_doctors_query_results3 = local_cursor.fetchall()
@@ -159,12 +176,15 @@ if __name__ == "__main__":
     upstream_cursor.execute("USE hospital_management")
 
     #M4 query on Mariadb 
-    upstream_data_query3 = "SELECT * FROM doctors WHERE department != 'Surgery' AND salary>100000"
+    # upstream_data_query3 = "SELECT * FROM doctors WHERE department != 'Surgery' AND salary>100000"
 
     print("M4 fragment fetched from Mariadb")
-    upstream_cursor.execute(upstream_data_query3)
-    upstream_doctors_query_results3 = upstream_cursor.fetchall()
-    print(upstream_doctors_query_results3)
+    # upstream_cursor.execute(upstream_data_query3)
+    # upstream_doctors_query_results3 = upstream_cursor.fetchall()
+    upstream_cursor.execute("CREATE TABLE IF NOT EXISTS m4_table (SELECT * FROM doctors)")
+    upstream_cursor.execute("SELECT * FROM m4_table")
+    m4_final = upstream_cursor.fetchall()
+    print(m4_final)
     print("")
     #End of M4
 
@@ -181,6 +201,7 @@ if __name__ == "__main__":
 
     local_cursor.execute(local_data_query1)
     local_adm_query_results = local_cursor.fetchall()
+    print("Query 2: Primary Fragmentation: location = Nairobi")
     print("M1 fragment fetched from localhost: ")
     print(local_adm_query_results)
     print("")
@@ -198,13 +219,15 @@ if __name__ == "__main__":
     upstream_cursor.execute("USE hospital_management")
 
     #M1 query where location is Nairobi 
-    upstream_data_query1 = "SELECT * FROM admissions WHERE location = 'Nairobi'"
-    
-    print("Query 2: Primary Fragmentation: location = Nairobi")
-    upstream_cursor.execute(upstream_data_query1)
-    upstream_adm_query_results = upstream_cursor.fetchall()
+    # upstream_data_query1 = "SELECT * FROM admissions WHERE location = 'Nairobi'"
+    # upstream_cursor.execute(upstream_data_query1)
+    # upstream_adm_query_results = upstream_cursor.fetchall()
+
+    upstream_cursor.execute("CREATE TABLE IF NOT EXISTS m1_nairobi (SELECT * FROM admissions)")
+    upstream_cursor.execute("SELECT * FROM m1_nairobi")
+    m1_nairobi = upstream_cursor.fetchall()
     print("M1 fragment fetched from MariaDb server: ")
-    print(upstream_adm_query_results)
+    print(m1_nairobi)
     print("")
     #print results from Mariadb
 
@@ -235,13 +258,16 @@ if __name__ == "__main__":
     upstream_cursor.execute("USE hospital_management")
 
     #M2 query where location is not Nairobi 
-    upstream_data_query2 = "SELECT * FROM admissions WHERE location != 'Nairobi'"
-    
-    
-    upstream_cursor.execute(upstream_data_query2)
-    upstream_adm_query_results1 = upstream_cursor.fetchall()
+    # upstream_data_query2 = "SELECT * FROM admissions WHERE location != 'Nairobi'"
+    # upstream_cursor.execute(upstream_data_query2)
+    # upstream_adm_query_results1 = upstream_cursor.fetchall()
+
+    upstream_cursor.execute("CREATE TABLE IF NOT EXISTS m2_not_nairobi (SELECT * FROM admissions)")
+    upstream_cursor.execute("SELECT * FROM m2_not_nairobi")
+    m2_nairobi = upstream_cursor.fetchall()
+
     print("M2 fragment fetched from MariaDb server: ")
-    print(upstream_adm_query_results1)
+    print(m2_nairobi)
     print("")
   
 
