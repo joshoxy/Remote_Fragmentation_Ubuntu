@@ -174,7 +174,7 @@ print("")
 merge_query_tables_loc = "SELECT * FROM m1_nairobi UNION SELECT * FROM m2_not_nairobi"
 upstream_cursor.execute(merge_query_tables_loc)
 merge_update_tables_loc = upstream_cursor.fetchall()
-print("Merged doctors table: m1_nairobi, m2_not_nairobi) ")
+print("Merged location table: m1_nairobi, m2_not_nairobi) ")
 print(merge_update_tables_loc)
 print("")
 #End of primary horizontal reconstruction
